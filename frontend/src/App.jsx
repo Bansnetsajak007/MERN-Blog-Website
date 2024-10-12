@@ -26,7 +26,8 @@ function App() {
           path: 'readmore/:id',
           element: <ReadMore />, 
         },
-        {path:'update/:id',
+        {
+          path:'update/:id',
           element:<UpdatePost/>
         }
       ],
