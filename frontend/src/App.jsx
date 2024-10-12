@@ -3,7 +3,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './Components/Home';
 import Navigation from './Components/Navigation';
 import CreatePost from './Components/CreatePost';
-import './index.css'; // Adjust the path if necessary
+import ReadMore from './Components/ReadMore';
+import Markdown from 'react-markdown'
+import './index.css';
+import UpdatePost from './Components/updatePost';
 
 function App() {
   const router = createBrowserRouter([
@@ -19,6 +22,13 @@ function App() {
           path: 'create',
           element: <CreatePost />,
         },
+        {
+          path: 'readmore/:id',
+          element: <ReadMore />, 
+        },
+        {path:'update/:id',
+          element:<UpdatePost/>
+        }
       ],
     },
   ]);

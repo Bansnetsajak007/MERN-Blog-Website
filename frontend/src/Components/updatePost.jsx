@@ -1,53 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const CreatePost = () => {
+const UpdatePost = () => {
+  const { state: post } = useLocation(); 
   const [author, setAuthor] = useState('');
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [description, setDescription] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (post) {
+      setAuthor(post.author);
+      setTitle(post.title);
+      setSummary(post.summary);
+      setDescription(post.description);
+    }
+  }, [post]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!author || !title || !summary || !description) {
-      alert("Please enter all the fields");
+      alert("Please fill out all fields");
       return;
     }
 
-    const newPost = { author, title, summary, description };
+    const updatedPost = { author, title, summary, description };
 
     try {
-      const response = await fetch('http://localhost:3000/create', {
-        method: 'POST',
+      const response = await fetch(`http://localhost:3000/${post._id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newPost)
+        body: JSON.stringify(updatedPost),
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log('Post created', data);
-        
-        setAuthor('');
-        setTitle('');
-        setSummary('');
-        setDescription('');
-        alert('Post created successfully!');
-        
+        alert('Post updated successfully!');
+        navigate('/'); 
       } else {
         console.log('Error:', response.status);
-        alert('Failed to create post. Please try again.');
+        alert('Failed to update post. Please try again.');
       }
     } catch (error) {
-      console.log('error', error);
+      console.log('Error:', error);
       alert('An error occurred. Please try again.');
     }
-  }
+  };
 
   return (
     <div className="bg-white min-h-screen p-8">
-      <h1 className="text-4xl font-bold text-black mb-12 text-center uppercase tracking-wider">Create a New Post</h1>
+      <h1 className="text-4xl font-bold text-black mb-12 text-center uppercase tracking-wider">Update Post</h1>
       <div className="max-w-4xl mx-auto">
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
@@ -102,12 +107,12 @@ const CreatePost = () => {
             type="submit"
             className="w-full bg-black text-white py-3 px-6 hover:bg-gray-800 transition duration-300 text-sm uppercase tracking-wider rounded"
           >
-            Submit
+            Update
           </button>
         </form>
       </div>
     </div>
   );
-}
+};
 
-export default CreatePost;
+export default UpdatePost;
