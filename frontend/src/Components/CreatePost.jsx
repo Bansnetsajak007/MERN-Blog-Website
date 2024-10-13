@@ -17,7 +17,7 @@ const CreatePost = () => {
     const newPost = { author, title, summary, description };
 
     try {
-      const response = await fetch('http://localhost:3000/create', {
+      const response = await fetch('https://mern-blog-website-9f9d.onrender.com/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
