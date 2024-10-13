@@ -7,7 +7,7 @@ function Home() {
 
   useEffect(() => {
     const blogs = async () => {
-      const response = await fetch('http://localhost:3000/');
+      const response = await fetch('https://mern-blog-website-9f9d.onrender.com/');
       const data = await response.json();
       setPosts(data);
     };
@@ -17,7 +17,7 @@ function Home() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/${id}`, {
+      const response = await fetch(`https://mern-blog-website-9f9d.onrender.com/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {
