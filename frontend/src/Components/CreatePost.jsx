@@ -17,7 +17,7 @@ const CreatePost = () => {
     const newPost = { author, title, summary, description };
 
     try {
-      const response = await fetch('https://mern-blog-website-9f9d.onrender.com/create', {
+      const response = await fetch('https://mern-blog-website-lni5.vercel.app/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

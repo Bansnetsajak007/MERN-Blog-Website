@@ -10,7 +10,7 @@ function Home() {
   useEffect(() => {
     const blogs = async () => {
       setIsFetching(true);
-      const response = await fetch('https://mern-blog-website-9f9d.onrender.com/');
+      const response = await fetch('https://mern-blog-website-lni5.vercel.app/');
       const data = await response.json();
       setPosts(data);
       setIsFetching(false);
@@ -21,7 +21,7 @@ function Home() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://mern-blog-website-9f9d.onrender.com/${id}`, {
+      const response = await fetch(`https://mern-blog-website-lni5.vercel.app/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {
