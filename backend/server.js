@@ -7,8 +7,19 @@ const cors = require('cors');
 const app = express();
 
 // CORS configuration
+const allowedOrigins = [
+    'https://mern-blog-website-iota.vercel.app', // Add your first frontend URL
+    'https://mern-blog-website-nfkesl52u-dipsankadariyas-projects.vercel.app', // Add your current frontend URL
+];
+
 const corsOptions = {
-    origin: 'https://mern-blog-website-iota.vercel.app/',
+    origin: (origin, callback) => {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true); // Allow the request
+        } else {
+            callback(new Error('Not allowed by CORS')); // Reject the request
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 };
@@ -24,7 +35,7 @@ app.post('/create', async (req, res) => {
         const post = await Blogpost.create(req.body);
         res.status(201).json(post); // Use 201 for resource creation
     } catch (error) {
-        console.error(error.message);
+        console.error('Error creating post:', error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -35,7 +46,7 @@ app.get('/', async (req, res) => {
         const posts = await Blogpost.find({});
         res.status(200).json(posts);
     } catch (error) {
-        console.error(error.message);
+        console.error('Error fetching posts:', error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -46,11 +57,11 @@ app.get('/:id', async (req, res) => {
         const { id } = req.params;
         const post = await Blogpost.findById(id);
         if (!post) {
-            return res.status(404).json({ message: `Post not found` });
+            return res.status(404).json({ message: 'Post not found' });
         }
         res.status(200).json(post);
     } catch (error) {
-        console.error(error.message);
+        console.error('Error fetching post:', error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -62,12 +73,12 @@ app.put('/:id', async (req, res) => {
         const updatedPost = await Blogpost.findByIdAndUpdate(id, req.body, { new: true });
 
         if (!updatedPost) {
-            return res.status(404).json({ message: `Post not found` });
+            return res.status(404).json({ message: 'Post not found' });
         }
 
         res.status(200).json(updatedPost);
     } catch (error) {
-        console.error(error.message);
+        console.error('Error updating post:', error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -79,12 +90,12 @@ app.delete('/:id', async (req, res) => {
         const post = await Blogpost.findByIdAndDelete(id);
 
         if (!post) {
-            return res.status(404).json({ message: `Post not found` });
+            return res.status(404).json({ message: 'Post not found' });
         }
 
         res.status(200).json({ message: 'Post deleted successfully' });
     } catch (error) {
-        console.error(error.message);
+        console.error('Error deleting post:', error.message);
         res.status(500).json({ message: error.message });
     }
 });
