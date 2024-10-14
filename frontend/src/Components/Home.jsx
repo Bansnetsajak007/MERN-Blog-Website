@@ -1,3 +1,4 @@
+Home.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,20 +8,15 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const blogs = async () => {
       setIsFetching(true);
-      try {
-        const response = await fetch('https://mern-blog-website-9f9d.onrender.com/');
-        const data = await response.json();
-        setPosts(data);
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-      } finally {
-        setIsFetching(false);
-      }
+      const response = await fetch('https://mern-blog-website-9f9d.onrender.com/');
+      const data = await response.json();
+      setPosts(data);
+      setIsFetching(false);
     };
 
-    fetchBlogs();
+    blogs();
   }, []);
 
   const handleDelete = async (id) => {
@@ -67,10 +63,7 @@ function Home() {
                 >
                   Read More
                 </button>
-                <button 
-                  onClick={() => navigate(`/update/${post._id}`, {state: post})} 
-                  className='bg-gray-400 text-black py-2 px-4 hover:bg-gray-300 border border-black transition duration-300 text-sm uppercase tracking-wider'
-                >
+                <button onClick={()=>navigate(`/update/${post._id}`,{state:post})} className='bg-gray-400 text-black py-2 px-4 hover:bg-gray-300 border border-black transition duration-300 text-sm uppercase tracking-wider'>
                   Update Post
                 </button>
                 <button
