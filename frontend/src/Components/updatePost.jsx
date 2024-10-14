@@ -29,7 +29,7 @@ const UpdatePost = () => {
     const updatedPost = { author, title, summary, description };
 
     try {
-      const response = await fetch(`https://mern-blog-website-lni5.vercel.app//${post._id}`, {
+      const response = await fetch(`https://mern-blog-website-lni5.vercel.app/${post._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -38,6 +38,8 @@ const UpdatePost = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        console.log('Post updated', data);
         alert('Post updated successfully!');
         navigate('/'); 
       } else {
@@ -45,7 +47,7 @@ const UpdatePost = () => {
         alert('Failed to update post. Please try again.');
       }
     } catch (error) {
-      console.log('Error:', error);
+      console.log('error', error);
       alert('An error occurred. Please try again.');
     }
   };
@@ -63,7 +65,6 @@ const UpdatePost = () => {
               className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
               value={author}
               onChange={(e) => setAuthor(e.target.value)} 
-              placeholder="Enter the author's name"
             />
           </div>
 
@@ -75,7 +76,6 @@ const UpdatePost = () => {
               className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
               value={title}
               onChange={(e) => setTitle(e.target.value)} 
-              placeholder="Enter the post title"
             />
           </div>
 
@@ -87,7 +87,6 @@ const UpdatePost = () => {
               className="w-full border-2 border-gray-300 p-2 focus:outline-none focus:border-black rounded"
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              placeholder="Briefly describe the post"
             />
           </div>
 
@@ -99,7 +98,6 @@ const UpdatePost = () => {
               className="w-full border-2 border-gray-300 p-4 focus:outline-none focus:border-black rounded resize-y min-h-[400px]"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Detailed blog content"
             />
           </div>
 
@@ -113,6 +111,6 @@ const UpdatePost = () => {
       </div>
     </div>
   );
-};
+}
 
 export default UpdatePost;

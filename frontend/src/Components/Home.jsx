@@ -1,4 +1,3 @@
-Home.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -63,7 +62,7 @@ function Home() {
                 >
                   Read More
                 </button>
-                <button onClick={()=>navigate(`/update/${post._id}`,{state:post})} className='bg-gray-400 text-black py-2 px-4 hover:bg-gray-300 border border-black transition duration-300 text-sm uppercase tracking-wider'>
+                <button onClick={() => navigate(`/update/${post._id}`, { state: post })} className='bg-gray-400 text-black py-2 px-4 hover:bg-gray-300 border border-black transition duration-300 text-sm uppercase tracking-wider'>
                   Update Post
                 </button>
                 <button

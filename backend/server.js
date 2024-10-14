@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const Blogpost = require('./models/blogModel');
 const cors = require('cors');
+
 const app = express();
 
 // CORS configuration
@@ -21,9 +22,9 @@ const PORT = process.env.PORT || 5000;
 app.post('/create', async (req, res) => {
     try {
         const post = await Blogpost.create(req.body);
-        res.status(200).json(post);
+        res.status(201).json(post); // Use 201 for resource creation
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -34,6 +35,7 @@ app.get('/', async (req, res) => {
         const posts = await Blogpost.find({});
         res.status(200).json(posts);
     } catch (error) {
+        console.error(error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -43,8 +45,12 @@ app.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const post = await Blogpost.findById(id);
+        if (!post) {
+            return res.status(404).json({ message: `Post not found` });
+        }
         res.status(200).json(post);
     } catch (error) {
+        console.error(error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -53,15 +59,15 @@ app.get('/:id', async (req, res) => {
 app.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const post = await Blogpost.findByIdAndUpdate(id, req.body);
+        const updatedPost = await Blogpost.findByIdAndUpdate(id, req.body, { new: true });
 
-        if (!post) {
-            return res.status(404).json({ message: `Cannot find post ` });
+        if (!updatedPost) {
+            return res.status(404).json({ message: `Post not found` });
         }
 
-        const updatedPost = await Blogpost.findById(id);
         res.status(200).json(updatedPost);
     } catch (error) {
+        console.error(error.message);
         res.status(500).json({ message: error.message });
     }
 });
@@ -73,21 +79,24 @@ app.delete('/:id', async (req, res) => {
         const post = await Blogpost.findByIdAndDelete(id);
 
         if (!post) {
-            return res.status(404).json({ message: `Cannot find post` });
+            return res.status(404).json({ message: `Post not found` });
         }
 
-        res.status(200).json(post);
+        res.status(200).json({ message: 'Post deleted successfully' });
     } catch (error) {
+        console.error(error.message);
         res.status(500).json({ message: error.message });
     }
 });
 
 // Connect to MongoDB and start the server
-mongoose.connect(process.env.MONGODB_URI).then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server started at port ${PORT}`);
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server started on port ${PORT}`);
+        });
+        console.log('Connected to the database');
+    })
+    .catch((error) => {
+        console.error('Database connection error:', error.message);
     });
-    console.log('Connected to the database');
-}).catch((error) => {
-    console.log(error);
-});

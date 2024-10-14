@@ -1,7 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-
 function ReadMore() {
   const location = useLocation();
   const { author, title, description } = location.state; 
