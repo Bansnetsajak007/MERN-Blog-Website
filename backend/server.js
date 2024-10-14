@@ -7,7 +7,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-    origin: 'https://mern-blog-website-lni5.vercel.app/',
+    origin: 'https://mern-blog-website-iota.vercel.app/',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 };
