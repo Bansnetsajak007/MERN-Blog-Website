@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CreatePost = () => {
   const [author, setAuthor] = useState('');
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
     if (!author || !title || !summary || !description) {
-      alert("Please enter all the fields");
+      setError("Please enter all the fields");
       return;
     }
 
@@ -25,23 +29,16 @@ const CreatePost = () => {
         body: JSON.stringify(newPost)
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Post created', data);
-        
-        setAuthor('');
-        setTitle('');
-        setSummary('');
-        setDescription('');
-        alert('Post created successfully!');
-        
-      } else {
-        console.log('Error:', response.status);
-        alert('Failed to create post. Please try again.');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const data = await response.json();
+      console.log('Post created', data);
+      navigate('/'); // Redirect to home page after successful creation
     } catch (error) {
-      console.log('error', error);
-      alert('An error occurred. Please try again.');
+      console.error('Error:', error);
+      setError('Failed to create post. Please try again.');
     }
   }
 
@@ -49,6 +46,7 @@ const CreatePost = () => {
     <div className="bg-white min-h-screen p-8">
       <h1 className="text-4xl font-bold text-black mb-12 text-center uppercase tracking-wider">Create a New Post</h1>
       <div className="max-w-4xl mx-auto">
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="author" className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Author</label>

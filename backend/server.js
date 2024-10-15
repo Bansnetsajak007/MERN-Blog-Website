@@ -5,33 +5,25 @@ const Blogpost = require('./models/blogModel');
 const cors = require('cors');
 
 const app = express();
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://mern-blog-website-gamma.vercel.app');
-    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
-});
-
 
 // CORS configuration
 const allowedOrigins = [
-    'https://mern-blog-website-gamma.vercel.app/',
-    'https://mern-blog-website-git-master-dipsankadariyas-projects.vercel.app/'
+    'https://mern-blog-website-gamma.vercel.app',
+    'https://mern-blog-website-git-master-dipsankadariyas-projects.vercel.app',
+    'https://mern-blog-website-8u7orkizc-dipsankadariyas-projects.vercel.app'
 ];
 
-
-
 const corsOptions = {
-    origin: (origin, callback) => {
+    origin: function (origin, callback) {
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true); // Allow the request
+            callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS')); // Reject the request
+            callback(new Error('Not allowed by CORS'));
         }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
+    optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
@@ -39,11 +31,22 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
+// Logging middleware
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
+// Root route
+app.get('/', (req, res) => {
+    res.send('Blog API is running');
+});
+
 // Creating a new post
 app.post('/create', async (req, res) => {
     try {
         const post = await Blogpost.create(req.body);
-        res.status(201).json(post); // Use 201 for resource creation
+        res.status(201).json(post);
     } catch (error) {
         console.error('Error creating post:', error.message);
         res.status(500).json({ message: error.message });
@@ -51,7 +54,7 @@ app.post('/create', async (req, res) => {
 });
 
 // Fetching all the posts
-app.get('/', async (req, res) => {
+app.get('/posts', async (req, res) => {
     try {
         const posts = await Blogpost.find({});
         res.status(200).json(posts);
@@ -62,7 +65,7 @@ app.get('/', async (req, res) => {
 });
 
 // Fetching a single post
-app.get('/:id', async (req, res) => {
+app.get('/posts/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const post = await Blogpost.findById(id);
@@ -77,15 +80,13 @@ app.get('/:id', async (req, res) => {
 });
 
 // Updating a post
-app.put('/:id', async (req, res) => {
+app.put('/posts/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const updatedPost = await Blogpost.findByIdAndUpdate(id, req.body, { new: true });
-
         if (!updatedPost) {
             return res.status(404).json({ message: 'Post not found' });
         }
-
         res.status(200).json(updatedPost);
     } catch (error) {
         console.error('Error updating post:', error.message);
@@ -94,15 +95,13 @@ app.put('/:id', async (req, res) => {
 });
 
 // Deleting a post
-app.delete('/:id', async (req, res) => {
+app.delete('/posts/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const post = await Blogpost.findByIdAndDelete(id);
-
         if (!post) {
             return res.status(404).json({ message: 'Post not found' });
         }
-
         res.status(200).json({ message: 'Post deleted successfully' });
     } catch (error) {
         console.error('Error deleting post:', error.message);
