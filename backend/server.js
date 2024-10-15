@@ -5,12 +5,22 @@ const Blogpost = require('./models/blogModel');
 const cors = require('cors');
 
 const app = express();
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://mern-blog-website-gamma.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
 
 // CORS configuration
 const allowedOrigins = [
     'https://mern-blog-website-gamma.vercel.app/',
     'https://mern-blog-website-git-master-dipsankadariyas-projects.vercel.app/'
 ];
+
+
 
 const corsOptions = {
     origin: (origin, callback) => {
