@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CreatePost = () => {
+const UpdatePost = () => {
   const [author, setAuthor] = useState('');
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
@@ -60,11 +60,9 @@ const CreatePost = () => {
               id="author"
               className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
               value={author}
-              onChange={(e) => setAuthor(e.target.value)} 
-              placeholder="Enter the author's name"
+              onChange={(e) => setAuthor(e.target.value)}
             />
           </div>
-
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Title</label>
             <input
@@ -72,45 +70,38 @@ const CreatePost = () => {
               id="title"
               className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
               value={title}
-              onChange={(e) => setTitle(e.target.value)} 
-              placeholder="Enter the post title"
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-
           <div>
             <label htmlFor="summary" className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Summary</label>
-            <textarea
+            <input
+              type="text"
               id="summary"
-              rows="4"
-              className="w-full border-2 border-gray-300 p-2 focus:outline-none focus:border-black rounded"
+              className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              placeholder="Briefly describe the post"
             />
           </div>
-
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Description</label>
             <textarea
               id="description"
-              rows="20"
-              className="w-full border-2 border-gray-300 p-4 focus:outline-none focus:border-black rounded resize-y min-h-[400px]"
+              className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Detailed blog content"
             />
           </div>
-
           <button
             type="submit"
-            className="w-full bg-black text-white py-3 px-6 hover:bg-gray-800 transition duration-300 text-sm uppercase tracking-wider rounded"
+            className="bg-black text-white py-3 px-6 hover:bg-gray-800 transition duration-300 w-full text-sm uppercase tracking-wider"
           >
-            Submit
+            Create Post
           </button>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default CreatePost;
+export default UpdatePost;
