@@ -8,7 +8,8 @@ const app = express();
 
 // CORS configuration
 const allowedOrigins = [
-    'https://mern-blog-website-gamma.vercel.app/'
+    'https://mern-blog-website-gamma.vercel.app/',
+    'https://mern-blog-website-git-master-dipsankadariyas-projects.vercel.app/'
 ];
 
 const corsOptions = {
