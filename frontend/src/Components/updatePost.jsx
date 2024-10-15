@@ -1,60 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 
-const UpdatePost = () => {
-  const { state: post } = useLocation(); 
+const CreatePost = () => {
   const [author, setAuthor] = useState('');
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [description, setDescription] = useState('');
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (post) {
-      setAuthor(post.author);
-      setTitle(post.title);
-      setSummary(post.summary);
-      setDescription(post.description);
-    }
-  }, [post]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!author || !title || !summary || !description) {
-      alert("Please fill out all fields");
+      alert("Please enter all the fields");
       return;
     }
 
-    const updatedPost = { author, title, summary, description };
+    const newPost = { author, title, summary, description };
 
     try {
-      const response = await fetch(`https://blog-sooty-ten-83.vercel.app/${post._id}`, {
-        method: 'PUT',
+      const response = await fetch('https://blog-sooty-ten-83.vercel.app/create', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Origin': 'https://mern-blog-website-gamma.vercel.app'
         },
-        body: JSON.stringify(updatedPost),
+        body: JSON.stringify(newPost),
+        mode: 'cors',
+        credentials: 'include'
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Post updated', data);
-        alert('Post updated successfully!');
-        navigate('/'); 
+        console.log('Post created', data);
+        
+        setAuthor('');
+        setTitle('');
+        setSummary('');
+        setDescription('');
+        alert('Post created successfully!');
+        
       } else {
         console.log('Error:', response.status);
-        alert('Failed to update post. Please try again.');
+        alert('Failed to create post. Please try again.');
       }
     } catch (error) {
       console.log('error', error);
       alert('An error occurred. Please try again.');
     }
-  };
+  }
 
   return (
     <div className="bg-white min-h-screen p-8">
-      <h1 className="text-4xl font-bold text-black mb-12 text-center uppercase tracking-wider">Update Post</h1>
+      <h1 className="text-4xl font-bold text-black mb-12 text-center uppercase tracking-wider">Create a New Post</h1>
       <div className="max-w-4xl mx-auto">
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
@@ -65,6 +61,7 @@ const UpdatePost = () => {
               className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
               value={author}
               onChange={(e) => setAuthor(e.target.value)} 
+              placeholder="Enter the author's name"
             />
           </div>
 
@@ -76,6 +73,7 @@ const UpdatePost = () => {
               className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
               value={title}
               onChange={(e) => setTitle(e.target.value)} 
+              placeholder="Enter the post title"
             />
           </div>
 
@@ -87,6 +85,7 @@ const UpdatePost = () => {
               className="w-full border-2 border-gray-300 p-2 focus:outline-none focus:border-black rounded"
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
+              placeholder="Briefly describe the post"
             />
           </div>
 
@@ -98,6 +97,7 @@ const UpdatePost = () => {
               className="w-full border-2 border-gray-300 p-4 focus:outline-none focus:border-black rounded resize-y min-h-[400px]"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="Detailed blog content"
             />
           </div>
 
@@ -105,7 +105,7 @@ const UpdatePost = () => {
             type="submit"
             className="w-full bg-black text-white py-3 px-6 hover:bg-gray-800 transition duration-300 text-sm uppercase tracking-wider rounded"
           >
-            Update
+            Submit
           </button>
         </form>
       </div>
@@ -113,4 +113,4 @@ const UpdatePost = () => {
   );
 }
 
-export default UpdatePost;
+export default CreatePost;
