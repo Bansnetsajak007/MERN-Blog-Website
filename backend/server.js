@@ -8,7 +8,7 @@ const app = express();
 
 // CORS configuration
 const allowedOrigins = [
-    'http://localhost:3000/'
+    'https://mern-blog-website-gamma.vercel.app/'
 ];
 
 const corsOptions = {
