@@ -8,8 +8,7 @@ const app = express();
 
 // CORS configuration
 const allowedOrigins = [
-    'https://mern-blog-website-iota.vercel.app', // Add your first frontend URL
-    'https://mern-blog-website-nfkesl52u-dipsankadariyas-projects.vercel.app', // Add your current frontend URL
+    'http://localhost:3000/'
 ];
 
 const corsOptions = {

@@ -9,7 +9,7 @@ function Home() {
   useEffect(() => {
     const blogs = async () => {
       setIsFetching(true);
-      const response = await fetch('https://mern-blog-website-lni5.vercel.app/');
+      const response = await fetch('https://blog-sooty-ten-83.vercel.app/');
       const data = await response.json();
       setPosts(data);
       setIsFetching(false);
@@ -20,7 +20,7 @@ function Home() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://mern-blog-website-lni5.vercel.app/${id}`, {
+      const response = await fetch(`https://blog-sooty-ten-83.vercel.app/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {

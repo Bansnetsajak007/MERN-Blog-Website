@@ -29,7 +29,7 @@ const UpdatePost = () => {
     const updatedPost = { author, title, summary, description };
 
     try {
-      const response = await fetch(`https://mern-blog-website-lni5.vercel.app/${post._id}`, {
+      const response = await fetch(`https://blog-sooty-ten-83.vercel.app/${post._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
