@@ -6,17 +6,18 @@ const cors = require('cors');
 
 const app = express();
 
-// Simplified CORS configuration
+// CORS configuration
 app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
+    origin: 'https://mern-blog-website-gamma.vercel.app', // Correct front-end URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true // To handle cookies and other headers if needed
 }));
 
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
-// Logging middleware
+// Logging middleware for better debugging
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
     next();
@@ -90,11 +91,16 @@ app.delete('/posts/:id', async (req, res) => {
         res.status(200).json({ message: 'Post deleted successfully' });
     } catch (error) {
         console.error('Error deleting post:', error.message);
-        res.status(500).json({ messege: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
 
 // Connect to MongoDB and start the server
+if (!process.env.MONGODB_URI) {
+    console.error('MONGODB_URI is not set');
+    process.exit(1);
+}
+
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
         app.listen(PORT, () => {
@@ -103,5 +109,11 @@ mongoose.connect(process.env.MONGODB_URI)
         console.log('Connected to the database');
     })
     .catch((error) => {
-        console.error('Database connection error:', error.messsage);
+        console.error('Database connection error:', error.message);
     });
+
+// Generic error handler
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Internal Server Error' });
+});

@@ -21,72 +21,37 @@ function Home() {
         setPosts(data);
       } catch (error) {
         console.error('Error fetching posts:', error);
-        setError('Failed to fetch posts. Please try again later.');
+        setError('Failed to fetch posts. Please try again.');
       } finally {
         setIsFetching(false);
       }
     };
-
     fetchPosts();
-  }, []);
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch(`${API_URL}/posts/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      setPosts(posts.filter(post => post._id !== id));
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Failed to delete the post. Please try again.');
-    }
-  };
-
-  const handleReadMore = (post) => {
-    navigate(`/readmore/${post._id}`, { state: post });
-  };
-
-  if (isFetching) return <p className='text-center'>Loading posts...</p>;
-  if (error) return <p className='text-center text-red-500'>{error}</p>;
+  }, [API_URL]);
 
   return (
-    <div className='bg-white min-h-screen p-8'>
-      <h1 className='text-4xl font-bold text-black mb-12 text-center uppercase tracking-wider'>Blogs</h1>
-      <div className='max-w-4xl mx-auto space-y-8'>
-        {posts.map((post) => (
-          <div
-            key={post._id}
-            className='border-t border-gray-200 pt-8 first:border-t-0 first:pt-0'
-          >
-            <p className='text-gray-500 text-sm mb-2 uppercase tracking-wider'>{post.author}</p>
-            <h2 className='text-2xl font-bold text-black mb-3'>{post.title}</h2>
-            <p className='text-gray-700 mb-4'>{post.summary}</p>
-            <div className='flex space-x-4'>
+    <div className="bg-white min-h-screen p-8">
+      <h1 className="text-4xl font-bold text-black mb-12 text-center uppercase tracking-wider">Recent Posts</h1>
+      {isFetching ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
+      ) : (
+        <div className="space-y-6">
+          {posts.map((post) => (
+            <div key={post._id} className="border p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-bold mb-2">{post.title}</h2>
+              <p className="text-gray-600 mb-4">{post.summary}</p>
               <button
-                className='bg-black text-white py-2 px-4 hover:bg-gray-800 transition duration-300 text-sm uppercase tracking-wider'
-                onClick={() => handleReadMore(post)}
+                onClick={() => navigate(`/posts/${post._id}`)}
+                className="text-black hover:underline"
               >
                 Read More
               </button>
-              <button 
-                onClick={() => navigate(`/update/${post._id}`)} 
-                className='bg-gray-400 text-black py-2 px-4 hover:bg-gray-300 border border-black transition duration-300 text-sm uppercase tracking-wider'
-              >
-                Update Post
-              </button>
-              <button
-                onClick={() => handleDelete(post._id)}
-                className='bg-white text-black border border-black py-2 px-4 hover:bg-gray-100 transition duration-300 text-sm uppercase tracking-wider'
-              >
-                Delete
-              </button>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
