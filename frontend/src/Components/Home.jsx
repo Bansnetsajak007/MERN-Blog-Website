@@ -6,13 +6,14 @@ function Home() {
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const API_URL = 'https://backend-eight-chi-19.vercel.app';
 
   useEffect(() => {
     const fetchPosts = async () => {
       setIsFetching(true);
       setError('');
       try {
-        const response = await fetch('https://blog-sooty-ten-83.vercel.app/posts');
+        const response = await fetch(`${API_URL}/posts`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -31,7 +32,7 @@ function Home() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`https://blog-sooty-ten-83.vercel.app/posts/${id}`, {
+      const response = await fetch(`${API_URL}/posts/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -70,7 +71,10 @@ function Home() {
               >
                 Read More
               </button>
-              <button onClick={() => navigate(`/update/${post._id}`, { state: post })} className='bg-gray-400 text-black py-2 px-4 hover:bg-gray-300 border border-black transition duration-300 text-sm uppercase tracking-wider'>
+              <button 
+                onClick={() => navigate(`/update/${post._id}`)} 
+                className='bg-gray-400 text-black py-2 px-4 hover:bg-gray-300 border border-black transition duration-300 text-sm uppercase tracking-wider'
+              >
                 Update Post
               </button>
               <button

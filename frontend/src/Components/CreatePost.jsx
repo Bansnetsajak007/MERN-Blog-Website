@@ -8,6 +8,7 @@ const CreatePost = () => {
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const API_URL = 'https://backend-eight-chi-19.vercel.app';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +22,7 @@ const CreatePost = () => {
     const newPost = { author, title, summary, description };
 
     try {
-      const response = await fetch('https://blog-sooty-ten-83.vercel.app/create', {
+      const response = await fetch(`${API_URL}/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ const CreatePost = () => {
 
       const data = await response.json();
       console.log('Post created', data);
-      navigate('/'); // Redirect to home page after successful creation
+      navigate('/');
     } catch (error) {
       console.error('Error:', error);
       setError('Failed to create post. Please try again.');

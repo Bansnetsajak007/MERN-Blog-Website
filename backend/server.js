@@ -6,28 +6,12 @@ const cors = require('cors');
 
 const app = express();
 
-// CORS configuration
-const allowedOrigins = [
-    'http://localhost:5173/',
-    'https://mern-blog-website-gamma.vercel.app/',
-    'https://mern-blog-website-git-master-dipsankadariyas-projects.vercel.app/',
-    'https://mern-blog-website-8u7orkizc-dipsankadariyas-projects.vercel.app'
-];
+// Simplified CORS configuration
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
 
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-    optionsSuccessStatus: 200
-};
-
-app.use(cors(corsOptions));
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
@@ -54,7 +38,7 @@ app.post('/create', async (req, res) => {
     }
 });
 
-// Fetching all the posts
+// Fetching all posts
 app.get('/posts', async (req, res) => {
     try {
         const posts = await Blogpost.find({});
@@ -106,7 +90,7 @@ app.delete('/posts/:id', async (req, res) => {
         res.status(200).json({ message: 'Post deleted successfully' });
     } catch (error) {
         console.error('Error deleting post:', error.message);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ messege: error.message });
     }
 });
 
@@ -119,5 +103,5 @@ mongoose.connect(process.env.MONGODB_URI)
         console.log('Connected to the database');
     })
     .catch((error) => {
-        console.error('Database connection error:', error.message);
+        console.error('Database connection error:', error.messsage);
     });

@@ -11,11 +11,12 @@ const UpdatePost = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const API_URL = 'https://backend-eight-chi-19.vercel.app';
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`https://blog-sooty-ten-83.vercel.app/posts/${id}`);
+        const response = await fetch(`${API_URL}/posts/${id}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -47,7 +48,7 @@ const UpdatePost = () => {
     const updatedPost = { author, title, summary, description };
 
     try {
-      const response = await fetch(`https://blog-sooty-ten-83.vercel.app/posts/${id}`, {
+      const response = await fetch(`${API_URL}/posts/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -61,14 +62,14 @@ const UpdatePost = () => {
 
       const data = await response.json();
       console.log('Post updated', data);
-      navigate('/'); // Redirect to home page after successful update
+      navigate('/');
     } catch (error) {
       console.error('Error:', error);
       setError('Failed to update post. Please try again.');
     }
-  }
+  };
 
-  if (isLoading) return <p className="text-center">Loading post...</p>;
+  if (isLoading) return <p className='text-center'>Loading post...</p>;
 
   return (
     <div className="bg-white min-h-screen p-8">
@@ -86,6 +87,7 @@ const UpdatePost = () => {
               onChange={(e) => setAuthor(e.target.value)}
             />
           </div>
+
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Title</label>
             <input
@@ -96,6 +98,7 @@ const UpdatePost = () => {
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
+
           <div>
             <label htmlFor="summary" className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Summary</label>
             <input
@@ -106,6 +109,7 @@ const UpdatePost = () => {
               onChange={(e) => setSummary(e.target.value)}
             />
           </div>
+
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Description</label>
             <textarea
@@ -116,6 +120,7 @@ const UpdatePost = () => {
               rows="10"
             />
           </div>
+
           <button
             type="submit"
             className="bg-black text-white py-3 px-6 hover:bg-gray-800 transition duration-300 w-full text-sm uppercase tracking-wider"
@@ -125,7 +130,7 @@ const UpdatePost = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default UpdatePost;
