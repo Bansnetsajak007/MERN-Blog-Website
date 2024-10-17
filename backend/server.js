@@ -8,8 +8,9 @@ const app = express();
 
 // CORS configuration
 const allowedOrigins = [
-    'https://mern-blog-website-gamma.vercel.app',
-    'https://mern-blog-website-git-master-dipsankadariyas-projects.vercel.app',
+    'http://localhost:5173/',
+    'https://mern-blog-website-gamma.vercel.app/',
+    'https://mern-blog-website-git-master-dipsankadariyas-projects.vercel.app/',
     'https://mern-blog-website-8u7orkizc-dipsankadariyas-projects.vercel.app'
 ];
 
