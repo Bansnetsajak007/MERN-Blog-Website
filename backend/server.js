@@ -58,7 +58,7 @@ app.put('/posts/:id', async (req, res) => {
 });
 
 // Port from environment variable, default to 3000 if not specified
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Start the server
 app.listen(PORT, () => {
