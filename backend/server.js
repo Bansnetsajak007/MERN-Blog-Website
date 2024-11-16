@@ -1,22 +1,16 @@
-// server.js
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
-const Blogpost = require('./models/blogModel');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import Blogpost from './models/blogModel.js'; // Ensure file extension is included
+import DBconnection from './database/dbConfig.js'; // Ensure file extension is included
+
+dotenv.config();
 
 const app = express();
-
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// MongoDB connection using the URI from the .env file
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((error) => console.error('Database connection error:', error));
 
 // Routes
 app.post('/create', async (req, res) => {
@@ -57,10 +51,15 @@ app.put('/posts/:id', async (req, res) => {
     }
 });
 
-// Port from environment variable, default to 3000 if not specified
 const PORT = process.env.PORT || 5000;
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-});
+(async () => {
+    try {
+        await DBconnection();
+        app.listen(PORT, () => {
+            console.log(`Server running at port ${PORT}`);
+        });
+    } catch (error) {
+        console.error('Failed to start server:', error.message);
+    }
+})();
