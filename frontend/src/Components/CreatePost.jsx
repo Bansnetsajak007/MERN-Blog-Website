@@ -1,83 +1,148 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const CreatePost = () => {
-  const [author, setAuthor] = useState('');
-  const [title, setTitle] = useState('');
-  const [summary, setSummary] = useState('');
-  const [description, setDescription] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    author: '',
+    title: '',
+    summary: '',
+    description: '',
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!author || !title || !summary || !description) {
-      setError("Please enter all fields");
-      return;
-    }
+    setLoading(true);
+    setError(null);
 
     try {
       const response = await fetch('http://localhost:5000/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ author, title, summary, description })
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-      if (!response.ok) throw new Error();
-      navigate('/');
+
+      if (!response.ok) {
+        throw new Error('Failed to create post');
+      }
+
+      const data = await response.json();
+      console.log('Post created successfully:', data);
+      setFormData({
+        author: '',
+        title: '',
+        summary: '',
+        description: '',
+      });
     } catch (error) {
-      setError('Failed to create post');
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="bg-white min-h-screen p-8">
-      <h1 className="text-4xl font-bold text-black mb-12 text-center uppercase tracking-wider">Create a New Post</h1>
-      <div className="max-w-4xl mx-auto">
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <form className="space-y-6" onSubmit={handleSubmit}>
+    <div className="flex justify-start items-start min-h-screen bg-white px-6 md:px-0 overflow-hidden">
+      <div className="w-full max-w-4xl p-8 bg-white">
+        <h1 className="text-3xl font-bold text-black text-left mb-6">Add a Blog Post</h1>
+
+        {error && <p className="text-sm text-red-600 text-left mb-4">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="space-y-6 text-left">
           <div>
-            <label className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Author</label>
+            <label htmlFor="author" className="block text-sm font-medium text-black mb-1">
+              Author:
+            </label>
             <input
               type="text"
-              className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
+              id="author"
+              name="author"
+              value={formData.author}
+              onChange={handleChange}
+              required
+              className="w-full text-sm px-3 py-3 border-b border-black focus:outline-none"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Title</label>
+            <label htmlFor="title" className="block text-sm font-medium text-black mb-1">
+              Title:
+            </label>
             <input
               type="text"
-              className="w-full border-b-2 border-gray-300 p-2 focus:outline-none focus:border-black"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              className="w-full text-sm px-3 py-3 border-b border-black focus:outline-none"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Summary</label>
-            <textarea
-              className="w-full border-2 border-gray-300 p-2 focus:outline-none focus:border-black rounded"
-              rows="4"
-              value={summary}
-              onChange={(e) => setSummary(e.target.value)}
+            <label htmlFor="summary" className="block text-sm font-medium text-black mb-1">
+              Summary:
+            </label>
+            <input
+              type="text"
+              id="summary"
+              name="summary"
+              value={formData.summary}
+              onChange={handleChange}
+              required
+              className="w-full text-sm px-3 py-3 border-b border-black focus:outline-none"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-1">Description</label>
+            <label htmlFor="description" className="block text-sm font-medium text-black mb-1">
+              Description:
+            </label>
             <textarea
-              className="w-full border-2 border-gray-300 p-4 focus:outline-none focus:border-black rounded resize-y min-h-[400px]"
-              rows="20"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              className="w-full h-48 text-sm px-3 py-3 border-b border-black focus:outline-none"
+              style={{ whiteSpace: 'pre-wrap' }}
+            ></textarea>
           </div>
-          <button type="submit" className="w-full bg-black text-white py-3 px-6 hover:bg-gray-800 transition duration-300 text-sm uppercase tracking-wider rounded">
-            Submit
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 text-sm font-medium text-white bg-black rounded-sm hover:bg-gray-800 transition duration-300"
+          >
+            {loading ? 'Creating Post...' : 'Create Post'}
           </button>
         </form>
+
+        {formData.description && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold mb-4">Post Preview</h2>
+            <div
+              className="text-sm"
+              style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}
+            >
+              {formData.description}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default CreatePost;

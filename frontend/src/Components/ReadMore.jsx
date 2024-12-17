@@ -1,30 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-function ReadMore() {
+const ReadMore = () => {
+  const { id } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { id } = useParams();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/posts/${id}`)
-      .then(res => res.json())
-      .then(data => setPost(data))
-      .finally(() => setLoading(false));
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/posts/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch post');
+        const data = await response.json();
+        setPost(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPost();
   }, [id]);
 
-  if (loading) return <p>Loading...</p>;
-  if (!post) return <p>Post not found</p>;
+  if (loading) return <span className="loading loading-spinner loading-lg"></span>;
+  if (error) return <div className="alert alert-error">{error}</div>;
+
+  if (!post) return <div className="alert alert-info">Post not found.</div>;
 
   return (
-    <div className="bg-white min-h-screen p-8">
-      <h1 className="text-4xl font-bold text-black mb-12 text-center uppercase tracking-wider">{post.title}</h1>
-      <div className="max-w-4xl mx-auto">
-        <p className="text-gray-500 text-lg font-bold mb-2 uppercase tracking-wider">{post.author}</p>
-        <p className="text-gray-700 text-lg whitespace-pre-wrap">{post.description}</p>
+    <div className="min-h-screen bg-white text-black px-6 sm:px-12 py-8 flex justify-center">
+      <div className="max-w-4xl w-full">
+        <h1 className="text-3xl sm:text-4xl font-bold text-left mb-8">{post.title}</h1>
+        <p className="text-sm sm:text-base text-gray-600 mb-6">{post.author} | {new Date(post.createdAt).toLocaleDateString()}</p>
+        
+        <div className="text-base sm:text-lg leading-relaxed text-black">
+          <p>{post.description}</p>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default ReadMore;
