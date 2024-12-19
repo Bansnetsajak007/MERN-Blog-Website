@@ -11,7 +11,7 @@ const ReadMore = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/posts/${id}`);
+        const response = await fetch(`https://blog-tx1k.onrender.com/posts/${id}`);
         if (!response.ok) throw new Error('Failed to fetch post');
         const data = await response.json();
         setPost(data);

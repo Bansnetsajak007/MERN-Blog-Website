@@ -10,7 +10,7 @@ function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/posts');
+        const response = await fetch('https://blog-tx1k.onrender.com/posts');
         if (!response.ok) {
           throw new Error('Failed to fetch posts');
         }
@@ -29,7 +29,7 @@ function Home() {
   const handleDelete = async (postId) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
       try {
-        const response = await fetch(`http://localhost:5000/posts/${postId}`, {
+        const response = await fetch(`https://blog-tx1k.onrender.com/posts/${postId}`, {
           method: 'DELETE',
         });
         if (!response.ok) {

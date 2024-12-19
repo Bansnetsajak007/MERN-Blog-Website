@@ -26,7 +26,7 @@ const CreatePost = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:5000/create', {
+      const response = await fetch('https://blog-tx1k.onrender.com/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
