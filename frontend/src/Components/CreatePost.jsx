@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { marked } from 'marked';
 
 const CreatePost = () => {
   const [formData, setFormData] = useState({
@@ -38,7 +39,7 @@ const CreatePost = () => {
       }
 
       const data = await response.json();
-      console.log('Post created successfully:', data);
+      alert('Post created successfully:', data);
       setFormData({
         author: '',
         title: '',
@@ -52,6 +53,8 @@ const CreatePost = () => {
     }
   };
 
+  const markdownPreview = marked(formData.description);
+
   return (
     <div className="flex justify-start items-start min-h-screen bg-white px-6 md:px-0 overflow-hidden">
       <div className="w-full max-w-4xl p-8 bg-white">
@@ -60,6 +63,7 @@ const CreatePost = () => {
         {error && <p className="text-sm text-red-600 text-left mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-6 text-left">
+          {/* Form fields */}
           <div>
             <label htmlFor="author" className="block text-sm font-medium text-black mb-1">
               Author:
@@ -107,7 +111,7 @@ const CreatePost = () => {
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-black mb-1">
-              Description:
+              Description (Markdown format):
             </label>
             <textarea
               id="description"
@@ -135,9 +139,8 @@ const CreatePost = () => {
             <div
               className="text-sm"
               style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}
-            >
-              {formData.description}
-            </div>
+              dangerouslySetInnerHTML={{ __html: markdownPreview }} // Render HTML from Markdown
+            />
           </div>
         )}
       </div>

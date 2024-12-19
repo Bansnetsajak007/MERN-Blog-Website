@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { marked } from 'marked'; // Import marked for parsing Markdown
 
 const ReadMore = () => {
   const { id } = useParams();
@@ -28,6 +29,8 @@ const ReadMore = () => {
 
   if (!post) return <div className="alert alert-info">Post not found.</div>;
 
+  const markdownDescription = marked(post.description); // Convert Markdown to HTML
+
   return (
     <div className="min-h-screen bg-white text-black px-6 sm:px-12 py-8 flex justify-center">
       <div className="max-w-4xl w-full">
@@ -35,7 +38,11 @@ const ReadMore = () => {
         <p className="text-sm sm:text-base text-gray-600 mb-6">{post.author} | {new Date(post.createdAt).toLocaleDateString()}</p>
         
         <div className="text-base sm:text-lg leading-relaxed text-black">
-          <p>{post.description}</p>
+          <div>{post.summary}</div>
+          <div
+            className="mt-6"
+            dangerouslySetInnerHTML={{ __html: markdownDescription }} // Render HTML from Markdown
+          />
         </div>
       </div>
     </div>
